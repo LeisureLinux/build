@@ -19,8 +19,9 @@ KEY=/etc/rootfs.key
 NEW=/etc/rootfs.key.new
 OLD=/etc/rootfs.key.old
 # As the build (CRYPTROOT_PARAMETERS): argon2 can run out of memory in the
-# initramfs on small boards. The keyfile is random, so pbkdf2 is enough.
-PBKDF="--pbkdf pbkdf2"
+# initramfs on small boards. The keyfile is random, so pbkdf2 is enough, and
+# the minimum cost: a slow derivation adds no strength, only boot time.
+PBKDF="--pbkdf pbkdf2 --pbkdf-force-iterations 1000"
 
 opens() { cryptsetup open --test-passphrase --key-file "$2" "$1" 2> /dev/null; }
 
